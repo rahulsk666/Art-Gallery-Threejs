@@ -146,7 +146,6 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   camera.updateProjectionMatrix();
   mirror.getRenderTarget().setSize(window.innerWidth, window.innerHeight);
-  // console.log(window.innerHeight, window.innerWidth);
 });
 
 window.addEventListener("click", (ev) => {
@@ -217,10 +216,7 @@ volumeButton.addEventListener("click", () => {
 
 // Function to adjust artwork and borders for specific mobile dimensions
 function adjustForMobile() {
-  console.log("first");
-  console.log(window.innerWidth);
-  const isMobile = window.innerWidth <= 480; // Target 375x678 screens
-  console.log({ isMobile });
+  const isMobile = window.innerWidth <= 480 || window.outerWidth <= 980; // Target 375x678 screens
   const artworkSize = isMobile
     ? { width: 2.1, height: 1.4, position: { z: -6 } }
     : { width: 3, height: 2, position: { z: -4 } }; // Mobile vs. default
@@ -231,8 +227,9 @@ function adjustForMobile() {
     ? { width: 0.3, height: 0.3, position: { z: -6 } }
     : { width: 0.3, height: 0.3, position: { z: -4 } }; // Mobile vs. default
   const titleSize = isMobile ? { fontSize: "4em" } : { fontSize: "6em" }; // Mobile vs. default
-  const artistize = isMobile ? { fontSize: 3,top:"2.9em" } : { fontSize: "3em" }; // Mobile vs. default
-
+  const artistSize = isMobile
+    ? { fontSize: 3, top: "2.9em" }
+    : { fontSize: "3em", top: "3em" }; // Mobile vs. default
   // Iterate through all base nodes (children of rootNode)
   rootNode.children.forEach((baseNode) => {
     baseNode.children.forEach((child) => {
@@ -254,7 +251,6 @@ function adjustForMobile() {
           artworkSize.height,
           0.1
         );
-        console.log({ artworkSize });
 
         child.position.z = artworkSize.position.z;
       }
@@ -274,9 +270,8 @@ function adjustForMobile() {
       }
 
       document.getElementById("title").style.fontSize = titleSize.fontSize;
-      document.getElementById("artist").style.top = "2.9em";
-      document.getElementById("artist").style.fontSize = "3em";
-    });
+      document.getElementById("artist").style.top = artistSize.top;
+      document.getElementById("artist").style.fontSize = artistSize.fontSize;    });
   });
 }
 
