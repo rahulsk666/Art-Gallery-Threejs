@@ -161,11 +161,7 @@ window.addEventListener("click", (ev) => {
   const intersections = raycaster.intersectObject(rootNode, true);
   if (intersections.length > 0) {
     const obj = intersections[0].object;
-    console.log(obj);
-
     const newIndex = obj.userData;
-    console.log(newIndex);
-
     if (obj.name === "LeftArrow") {
       rotateGallery(-1, newIndex);
     }
@@ -177,3 +173,43 @@ window.addEventListener("click", (ev) => {
 
 document.getElementById("title").innerText = titles[0];
 document.getElementById("artist").innerText = artists[0];
+
+const listener = new THREE.AudioListener();
+camera.add(listener);
+const sound = new THREE.Audio(listener);
+
+const audioContext = listener.context;
+document.addEventListener('click', () => {
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
+});
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load("./sounds/Chillpeach.mp3", function (buffer) {
+  sound.setBuffer(buffer);
+  // sound.autoplay = true;
+  // sound.hasPlaybackControl = true;
+  sound.setLoop(true);
+  window.addEventListener("click", function () {
+    sound.play();
+  });
+});
+
+let isMuted = false;
+const volumeButton = document.getElementById("volume-button");
+const volumeIcon = document.getElementById("volume-icon");
+volumeButton.addEventListener("click", () => {
+  if (isMuted) {
+    sound.setVolume(0.5); // Set desired volume
+    // sound.play();
+    volumeIcon.src = "Volume-on.png"; // Change icon to "On"
+    volumeIcon.alt = "Volume On";
+    isMuted = false;
+  } else {
+    sound.setVolume(0); // Set desired volume
+    // sound.stop();
+    volumeIcon.src = "Volume-off.png"; // Change icon to "On"
+    volumeIcon.alt = "Volume Off";
+    isMuted = true;
+  }
+});
