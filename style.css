@@ -1,0 +1,54 @@
+body {
+  margin: 0;
+}
+
+h1,
+h2 {
+  color: white;
+  text-align: center;
+  width: 100%;
+
+  font-family: "Inter";
+  font-weight: 100;
+
+  transition: opacity 0.5s ease-in-out;
+}
+
+.title {
+  position: fixed;
+  font-size: 6em;
+  top: 0.01em;
+}
+
+.artist {
+  position: fixed;
+  font-size: 3em;
+  color: gray;
+  top: 2.7em;
+}
+
+.volume-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #000000;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .volume-button:hover {
+    transform: scale(1.1);
+  }
+
+  .volume-button img {
+    width: 60%;
+    height: 60%;
+  }
