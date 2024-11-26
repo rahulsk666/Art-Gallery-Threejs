@@ -146,6 +146,7 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   camera.updateProjectionMatrix();
   mirror.getRenderTarget().setSize(window.innerWidth, window.innerHeight);
+  // console.log(window.innerHeight, window.innerWidth);
 });
 
 window.addEventListener("click", (ev) => {
@@ -179,10 +180,10 @@ camera.add(listener);
 const sound = new THREE.Audio(listener);
 
 const audioContext = listener.context;
-document.addEventListener('click', () => {
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
+document.addEventListener("click", () => {
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
 });
 const audioLoader = new THREE.AudioLoader();
 audioLoader.load("./sounds/Chillpeach.mp3", function (buffer) {
@@ -213,3 +214,74 @@ volumeButton.addEventListener("click", () => {
     isMuted = true;
   }
 });
+
+// Function to adjust artwork and borders for specific mobile dimensions
+function adjustForMobile() {
+  console.log("first");
+  console.log(window.innerWidth);
+  const isMobile = window.innerWidth <= 480; // Target 375x678 screens
+  console.log({ isMobile });
+  const artworkSize = isMobile
+    ? { width: 2.1, height: 1.4, position: { z: -6 } }
+    : { width: 3, height: 2, position: { z: -4 } }; // Mobile vs. default
+  const borderSize = isMobile
+    ? { width: 2.3, height: 1.6, position: { z: -6 } }
+    : { width: 3.2, height: 2.2, position: { z: -4 } }; // Mobile vs. default
+  const arrowSize = isMobile
+    ? { width: 0.3, height: 0.3, position: { z: -6 } }
+    : { width: 0.3, height: 0.3, position: { z: -4 } }; // Mobile vs. default
+  const titleSize = isMobile ? { fontSize: "4em" } : { fontSize: "6em" }; // Mobile vs. default
+  const artistize = isMobile ? { fontSize: 3,top:"2.9em" } : { fontSize: "3em" }; // Mobile vs. default
+
+  // Iterate through all base nodes (children of rootNode)
+  rootNode.children.forEach((baseNode) => {
+    baseNode.children.forEach((child) => {
+      if (child.name.startsWith("Border__")) {
+        // Recreate and assign new border geometry
+        child.geometry.dispose(); // Dispose of the old geometry
+        child.geometry = new THREE.BoxGeometry(
+          borderSize.width,
+          borderSize.height,
+          0.09
+        );
+        child.position.z = borderSize.position.z;
+      }
+      if (child.name.startsWith("Art__")) {
+        // Recreate and assign new artwork geometry
+        child.geometry.dispose(); // Dispose of the old geometry
+        child.geometry = new THREE.BoxGeometry(
+          artworkSize.width,
+          artworkSize.height,
+          0.1
+        );
+        console.log({ artworkSize });
+
+        child.position.z = artworkSize.position.z;
+      }
+
+      if (
+        child.name.startsWith("LeftArrow") ||
+        child.name.startsWith("RightArrow")
+      ) {
+        // Recreate and assign new artwork geometry
+        child.geometry.dispose(); // Dispose of the old geometry
+        child.geometry = new THREE.BoxGeometry(
+          arrowSize.width,
+          arrowSize.height,
+          0.01
+        );
+        child.position.z = arrowSize.position.z;
+      }
+
+      document.getElementById("title").style.fontSize = titleSize.fontSize;
+      document.getElementById("artist").style.top = "2.9em";
+      document.getElementById("artist").style.fontSize = "3em";
+    });
+  });
+}
+
+// Add event listener for window resize
+window.addEventListener("resize", adjustForMobile);
+
+// Initial call to set the correct size
+adjustForMobile();
